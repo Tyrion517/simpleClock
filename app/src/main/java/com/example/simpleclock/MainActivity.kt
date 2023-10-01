@@ -4,17 +4,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.simpleclock.ui.theme.SimpleClockTheme
+
 import java.text.DateFormat
-import java.text.SimpleDateFormat
+
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +14,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var timeTextView: TextView
     private lateinit var updateTimeButton: Button
 
-    val timeFormat = DateFormat.getTimeInstance()
+
+    private val timeFormat: DateFormat = DateFormat.getTimeInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +27,23 @@ class MainActivity : ComponentActivity() {
         timeTextView.text = timeFormat.format(Date())
 
         updateTimeButton.setOnClickListener {
-            timeTextView.text = timeFormat.format(Date())
+            updateTime()
         }
+
+        // 新建thread来控制时间更新
+        Thread {
+            while (true) {
+                timeTextView.post {
+                    updateTime()
+                }
+                //间隔太短将难以验证是否阻塞主进程
+                Thread.sleep(5000)
+            }
+        }.start()
+    }
+
+    private fun updateTime() {
+        timeTextView.text = timeFormat.format(Date())
     }
 
 
