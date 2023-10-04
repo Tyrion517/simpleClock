@@ -1,9 +1,15 @@
 package com.example.simpleclock
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.text.DateFormat
 import java.util.Date
 import java.util.UUID
 
 private val timeFormat: DateFormat = DateFormat.getTimeInstance()
-data class Record (val uuid: UUID=UUID.randomUUID(),
-    val time: String= timeFormat.format(Date()))
+
+@Entity
+data class Record(
+    val time: String = timeFormat.format(Date()),
+    @PrimaryKey val id: UUID = UUID.randomUUID()
+)

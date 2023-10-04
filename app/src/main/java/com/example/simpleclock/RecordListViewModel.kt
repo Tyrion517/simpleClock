@@ -3,11 +3,7 @@ package com.example.simpleclock
 import androidx.lifecycle.ViewModel
 
 class RecordListViewModel: ViewModel() {
-    val records = mutableListOf<Record>()
-
-    init {
-        for (i in 0 until 50) {
-            records += Record()
-        }
-    }
+    val recordRepository: RecordRepository = RecordRepository.get()
+    //Dao->Repository->ViewModel过程中，每一步都是LiveData,不会卡UI
+    val recordsListLiveData = recordRepository.getRecords()
 }
