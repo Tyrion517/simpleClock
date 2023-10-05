@@ -9,11 +9,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 private const val TAG = "RecordListFragment"
 class RecordListFragment: Fragment() {
@@ -54,9 +52,7 @@ class RecordListFragment: Fragment() {
 
     //用coroutine删除，以防阻塞UI
     private fun deleteRecord(record: Record){
-        lifecycleScope.launch(Dispatchers.IO) {
-            recordListViewModel.recordRepository.deleteRecord(record)
-        }
+        recordListViewModel.recordRepository.deleteRecord(record)
     }
 
     private fun updateUI(records: List<Record>) {
