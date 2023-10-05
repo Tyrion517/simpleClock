@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.example.simpleclock.database.RecordDatabase
 import java.util.UUID
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "record-database"
 class RecordRepository private constructor(context: Context){
@@ -16,14 +18,27 @@ class RecordRepository private constructor(context: Context){
     ).build()
 
     private val recordDao = database.recordDao()
+    private val executor: Executor = Executors.newSingleThreadExecutor()
 
     fun getRecords(): LiveData<List<Record>> = recordDao.getRecords()
     fun getRecord(id: UUID): LiveData<Record> = recordDao.getRecord(id)
+
+    //增减数据全用一个线程解决
     fun addRecord(record: Record){
-        recordDao.addRecord(record)
+        executor.execute {
+            recordDao.addRecord(record)
+        }
+    }
+
+    fun addRecords(records: List<Record>) {
+        executor.execute {
+            recordDao.addRecords(records)
+        }
     }
     fun deleteRecord(record: Record){
-        recordDao.deleteRecord(record)
+        executor.execute {
+            recordDao.deleteRecord(record)
+        }
     }
 
     companion object {

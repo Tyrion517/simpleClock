@@ -20,6 +20,9 @@ interface RecordDao {
     @Insert
     fun addRecord(record: Record)
 
+    @Insert
+    fun addRecords(records: List<Record>)
+
     @Delete
     fun deleteRecord(record: Record)
 }
